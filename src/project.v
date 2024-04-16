@@ -21,4 +21,57 @@ module tt_um_example (
   assign uio_out = 0;
   assign uio_oe  = 0;
 
+  wire left_x, right_x, left_aim, right_aim, shoot;
+  wire [4:0] select;
+
+  controls control_inst (.clk(clk), .reset(rst_n), .move_left(ui_in[0]),
+    .move_right(ui_in[1]), .aim_left(ui_in[2]), .aim_right(ui_in[3]), .shoot(ui_in[4]),
+      .start_new_game(ui_in[5]), .left_x(left_x), .right_x(right_x), .left_aim(left_aim),
+       .right_aim(right_aim), .shoot_out(shoot), .select(select));
+
+  wire [4:0] x_pos;
+  wire dir; 
+  wire [4:0] rise;
+  wire [4:0] run;
+  wire [2:0] aim_pos; 
+
+  pos_aim pos_aim_inst (.clk(clk), .reset(rst_n), .left_x(left_x), 
+    .right_x(right_x), .left_aim(left_aim), .right_aim(right_aim), 
+      .x_pos(x_pos), .dir(dir), .rise(rise), .run(run), .aim_pos(aim_pos));
+
+  wire [4:0] target_x, target_y;
+  wire [4:0] tc_pos; 
+
+  trajectory_calc tc (.x_pos(x_pos), .rise_in(rise), .run_in(run),    // IOs: Input path
+    .shoot(shoot), .target_x(target_x), .target_y(target_y), .clk(clk), 
+      .rst(rst_n), .result_valid(uo_out[0]), .hit(uo_out[1]), .positionx(tc_pos),
+        .direction_in(dir));
+
+  target_gen target_gen_inst (.clk(clk), .reset(rst_n), .result_valid(uo_out[0]),
+   .target_x(target_x), .target_y(target_y));      
+
+  reg [4:0] temp_out; 
+  assign uo_out[6:2] = temp_out;
+  always @(*) begin
+    case(select)
+      5'b10000 : begin
+        temp_out = x_pos; // Cannon Position
+      end
+      5'b01000 : begin
+        temp_out = {2'd0, aim_pos}; // Aim Position
+      end
+      5'b00100 : begin
+        temp_out = target_x;
+      end
+      5'b00010 : begin
+        temp_out = target_y; 
+      end
+      5'b00001 : begin
+        temp_out = tc_pos; 
+      end
+    endcase
+  end
+
+// TODO: CONTROL -> output the target x, then target y, then start game 
+
 endmodule
