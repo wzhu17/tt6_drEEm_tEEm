@@ -63,20 +63,11 @@ always @(*) begin
             next_y = 5'b0;
         end
         `CALCULATING : begin
-            if (direction != next_direction && direction) begin
-                next_x = 5'd31 - (add_run) - 1;
-            end else begin
-            if (direction == next_direction && direction) begin
-                next_x = add_run;
-            end end else begin
-            if (direction != next_direction && ~direction) begin
-                next_x = run - cur_x; 
-            end end else begin
-            if (direction == next_direction && ~direction) begin
-                next_x = sub_run; 
-            end end else begin
-                next_x = 5'd0;
-            end
+            if (direction != next_direction && direction) next_x = 5'd31 - (add_run) - 1;
+            else if (direction == next_direction && direction) next_x = add_run;
+            else if (direction != next_direction && ~direction) next_x = run - cur_x; 
+            else if (direction == next_direction && ~direction) next_x = sub_run; 
+            else next_x = 5'd0;
             //next_x = direction ? cur_x + run : cur_x - run;
             next_y = cur_y + rise;
         end
