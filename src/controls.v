@@ -7,51 +7,43 @@ module controls(
     input aim_right,
     input shoot,
     input start_new_game,
-    output reg left_x,
-    output reg right_x,
-    output reg left_aim,
-    output reg right_aim,
-    output reg shoot_out,
+    output wire left_x,
+    output wire right_x,
+    output wire left_aim,
+    output wire right_aim,
+    output wire shoot_out,
     output reg [4:0] select
 );
+    wire [3:0] sum;
+    wire start_new_game_intermediate;
+    wire start_new_game_final;
+    assign sum = move_left + move_right + aim_left + aim_right + shoot;
+    wire en = sum < 2;
 
-    reg [3:0] sum;
+    one_pulse move_left_reg(.clk(clk), .reset(reset), .en(en), .in(move_left), .out(left_x));
+    one_pulse move_right_reg(.clk(clk), .reset(reset), .en(en), .in(move_right), .out(right_x));
+    one_pulse left_aim_reg(.clk(clk), .reset(reset), .en(en), .in(aim_left), .out(left_aim));
+    one_pulse right_aim_reg(.clk(clk), .reset(reset), .en(en), .in(aim_right), .out(right_aim));
+    one_pulse shoot_reg(.clk(clk), .reset(reset), .en(en), .in(shoot), .out(shoot_out));
 
-    always @(posedge clk) begin
-        if (reset | start_new_game) begin
-            // Reset all outputs
-            left_x = 1'b0;
-            right_x = 1'b0;
-            left_aim = 1'b0;
-            right_aim = 1'b0;
-            shoot_out = 1'b0;
-            select = 5'b00000;
-        end else begin
-            sum = move_left + move_right + aim_left + aim_right + shoot;
-            // if more than one button are pressed. Don't respond.
-            if (sum > 1) begin
-                left_x = 1'b0;
-                right_x = 1'b0;
-                left_aim = 1'b0;
-                right_aim = 1'b0;
-                shoot_out = 1'b0;
-                select = 5'b00000;
-            // only one button was pressed. Assign accordingly. 
-            end else begin
-                shoot_out = shoot;
-                left_x = move_left;
-                right_x = move_right;
-                left_aim = aim_left;
-                right_aim = aim_right;
-                // Assign select signal
-                if (move_left | move_right) begin
-                    select = 5'b10000;
-                end else if (aim_left | aim_right) begin
-                    select = 5'b01000;
-                end else begin
-                    select = 5'b00000;
-                end
+    dff new_game(.clk(clk), .d(start_new_game), .q(start_new_game_intermediate));
+    dff duummy(.clk(clk), .d(start_new_game_intermediate), .q(start_new_game_final));
+
+    always @(*) begin
+        if (sum < 2) begin
+            if (move_left | move_right) begin
+                select <= 5'b10000;
+            end else if (aim_left | aim_right) begin
+                select <= 5'b01000;
+            end else if (start_new_game == 1) begin
+                select <= 5'b00100;
+            end else if (start_new_game_final == 1) begin
+                select <= 5'b00010;
             end
+        end else begin
+            select <= 5'b00000;
         end
     end
+
+
 endmodule

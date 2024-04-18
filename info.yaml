@@ -21,6 +21,7 @@ project:
     - "pos_aim.v"
     - "target_gen.v"
     - "trajectory_calc.v"
+    - "one_pulse.v"
 
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
 pinout:
