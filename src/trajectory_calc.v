@@ -64,13 +64,13 @@ always @(*) begin
                 next_x = 5'd31 - (add_run) - 1;
             end
             if (direction == next_direction && direction) begin
-                next_x = cur_x + run;
+                next_x = add_run;
             end
             if (direction != next_direction && ~direction) begin
                 next_x = run - cur_x; 
             end
             if (direction == next_direction && ~direction) begin
-                next_x = cur_x - run; 
+                next_x = sub_run; 
             end
             //next_x = direction ? cur_x + run : cur_x - run;
             next_y = cur_y + rise;
@@ -112,8 +112,8 @@ always @(*) begin
                 next_x > next_x + run ? ~direction : direction :
                 next_x < next_x - run ? ~direction : direction;
                 */
-                cur_x > cur_x + run ? ~direction : direction :
-                cur_x < cur_x - run ? ~direction : direction;
+                cur_x > add_run ? ~direction : direction :
+                cur_x < sub_run ? ~direction : direction;
         end
         `DONE : begin
             next_direction = 1'b0;
