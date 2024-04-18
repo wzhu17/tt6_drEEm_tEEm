@@ -17,7 +17,7 @@ module controls(
     wire [3:0] sum;
     wire start_new_game_intermediate;
     wire start_new_game_final;
-    assign sum = move_left + move_right + aim_left + aim_right + shoot;
+    assign sum = {3'b0, move_left} + {3'b0, move_right} + {3'b0, aim_left} + {3'b0, aim_right + shoot};
     wire en = sum < 2;
 
     one_pulse move_left_reg(.clk(clk), .reset(reset), .en(en), .in(move_left), .out(left_x));
