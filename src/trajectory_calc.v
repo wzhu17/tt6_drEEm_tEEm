@@ -41,6 +41,9 @@ always @(*) begin
         `DONE : begin
             next_state = `IDLE;
         end
+        default : begin
+            next_state = `IDLE;
+        end
     endcase
 end
 
@@ -60,24 +63,21 @@ always @(*) begin
             next_y = 5'b0;
         end
         `CALCULATING : begin
-            if (direction != next_direction && direction) begin
-                next_x = 5'd31 - (add_run) - 1;
-            end
-            if (direction == next_direction && direction) begin
-                next_x = add_run;
-            end
-            if (direction != next_direction && ~direction) begin
-                next_x = run - cur_x; 
-            end
-            if (direction == next_direction && ~direction) begin
-                next_x = sub_run; 
-            end
+            if (direction != next_direction && direction) next_x = 5'd31 - (add_run) - 1;
+            else if (direction == next_direction && direction) next_x = add_run;
+            else if (direction != next_direction && ~direction) next_x = run - cur_x; 
+            else if (direction == next_direction && ~direction) next_x = sub_run; 
+            else next_x = 5'd0;
             //next_x = direction ? cur_x + run : cur_x - run;
             next_y = cur_y + rise;
         end
         `DONE : begin
             next_x = 5'b0;
             next_y = 5'b0;
+        end
+        default: begin
+            next_x = 5'b0;
+            next_y = 5'b0; 
         end
     endcase
 end
@@ -94,6 +94,10 @@ always @(*) begin
             next_run = run;
         end
         `DONE : begin
+            next_rise = 5'b0;
+            next_run = 5'b0;
+        end
+        default : begin
             next_rise = 5'b0;
             next_run = 5'b0;
         end
@@ -134,6 +138,9 @@ always @(*) begin
             next_hit = cur_x == target_x && cur_y == target_y ? 1'b1 : hit;
         end
         `DONE : begin
+            next_hit = 1'b0;
+        end
+        default : begin
             next_hit = 1'b0;
         end
     endcase

@@ -11,6 +11,7 @@ PROJECT_SOURCES += ff_lib.v
 PROJECT_SOURCES += controls.v
 PROJECT_SOURCES += pos_aim.v
 PROJECT_SOURCES += target_gen.v
+PROJECT_SOURCES += one_pulse.v
 
 ifneq ($(GATES),yes)
 
