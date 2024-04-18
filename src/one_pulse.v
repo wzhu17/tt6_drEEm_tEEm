@@ -17,9 +17,9 @@ module one_pulse(
     
     always @(*) begin
         if (en) begin
-            out <= ~last_value & in;
+            out = ~last_value & in;
         end else begin
-            out <= 0;
+            out = 0;
         end
     end
 
