@@ -41,6 +41,9 @@ always @(*) begin
         `DONE : begin
             next_state = `IDLE;
         end
+        default : begin
+            next_state = `IDLE;
+        end
     endcase
 end
 
@@ -79,6 +82,10 @@ always @(*) begin
             next_x = 5'b0;
             next_y = 5'b0;
         end
+        default: begin
+            next_x = 5'b0;
+            next_y = 5'b0; 
+        end
     endcase
 end
 
@@ -94,6 +101,10 @@ always @(*) begin
             next_run = run;
         end
         `DONE : begin
+            next_rise = 5'b0;
+            next_run = 5'b0;
+        end
+        default : begin
             next_rise = 5'b0;
             next_run = 5'b0;
         end
@@ -134,6 +145,9 @@ always @(*) begin
             next_hit = cur_x == target_x && cur_y == target_y ? 1'b1 : hit;
         end
         `DONE : begin
+            next_hit = 1'b0;
+        end
+        default : begin
             next_hit = 1'b0;
         end
     endcase
