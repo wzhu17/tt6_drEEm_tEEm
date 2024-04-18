@@ -48,6 +48,11 @@ end
 // TODO:
 // take into account moving the rest forward before changing direction
 // take into account intermediate values between larger rise/runs? 
+wire [4:0] add_run; 
+wire [4:0] sub_run;
+assign add_run = cur_x + run;
+assign sub_run = cur_x - run;
+
 always @(*) begin
     case(state)
         `IDLE : begin
@@ -55,7 +60,19 @@ always @(*) begin
             next_y = 5'b0;
         end
         `CALCULATING : begin
-            next_x = direction ? cur_x + run : cur_x - run;
+            if (direction != next_direction && direction) begin
+                next_x = 5'd31 - (add_run) - 1;
+            end
+            if (direction == next_direction && direction) begin
+                next_x = cur_x + run;
+            end
+            if (direction != next_direction && ~direction) begin
+                next_x = run - cur_x; 
+            end
+            if (direction == next_direction && ~direction) begin
+                next_x = cur_x - run; 
+            end
+            //next_x = direction ? cur_x + run : cur_x - run;
             next_y = cur_y + rise;
         end
         `DONE : begin
@@ -91,8 +108,12 @@ always @(*) begin
         end
         `CALCULATING : begin 
             next_direction = direction ? 
+                /*
                 next_x > next_x + run ? ~direction : direction :
                 next_x < next_x - run ? ~direction : direction;
+                */
+                cur_x > cur_x + run ? ~direction : direction :
+                cur_x < cur_x - run ? ~direction : direction;
         end
         `DONE : begin
             next_direction = 1'b0;
@@ -132,6 +153,7 @@ dffr #(5) run_ff(.clk(clk), .r(rst), .d(next_run), .q(run));
 dffr #(1) hit_ff(.clk(clk), .r(rst), .d(next_hit), .q(hit));
 // Flip Flop for direction
 dffr #(1) direction_ff(.clk(clk), .r(rst), .d(next_direction), .q(direction));
+
 
 assign result_valid = state == `DONE;
 assign positionx = cur_x;

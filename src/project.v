@@ -17,7 +17,7 @@ module tt_um_example (
 );
 
   // All output pins must be assigned. If not used, assign to 0.
-  assign uo_out  = ui_in + uio_in;  // Example: ou_out is the sum of ui_in and uio_in
+  //assign uo_out  = ui_in + uio_in;  // Example: ou_out is the sum of ui_in and uio_in
   assign uio_out = 0;
   assign uio_oe  = 0;
 
@@ -41,17 +41,21 @@ module tt_um_example (
 
   wire [4:0] target_x, target_y;
   wire [4:0] tc_pos; 
+  wire result_valid, hit;
 
   trajectory_calc tc (.x_pos(x_pos), .rise_in(rise), .run_in(run),    // IOs: Input path
     .shoot(shoot), .target_x(target_x), .target_y(target_y), .clk(clk), 
-      .rst(rst_n), .result_valid(uo_out[0]), .hit(uo_out[1]), .positionx(tc_pos),
+      .rst(rst_n), .result_valid(result_valid), .hit(hit), .positionx(tc_pos),
         .direction_in(dir));
 
-  target_gen target_gen_inst (.clk(clk), .reset(rst_n), .result_valid(uo_out[0]),
-   .target_x(target_x), .target_y(target_y));      
+  target_gen target_gen_inst (.clk(clk), .reset(rst_n), .result_valid(result_valid),
+   .target_x(target_x), .target_y(target_y), .shoot(shoot));      
 
   reg [4:0] temp_out; 
+  assign uo_out[0] = result_valid;
+  assign uo_out[1] = hit;
   assign uo_out[6:2] = temp_out;
+  assign uo_out[7] = 0;
   always @(*) begin
     case(select)
       5'b10000 : begin
@@ -68,6 +72,9 @@ module tt_um_example (
       end
       5'b00001 : begin
         temp_out = tc_pos; 
+      end
+      default : begin
+        temp_out = 5'd0;
       end
     endcase
   end
