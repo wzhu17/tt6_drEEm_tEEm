@@ -32,16 +32,16 @@ module controls(
     always @(*) begin
         if (sum < 2) begin
             if (move_left | move_right) begin
-                select <= 5'b10000;
+                select = 5'b10000;
             end else if (aim_left | aim_right) begin
-                select <= 5'b01000;
+                select = 5'b01000;
             end else if (start_new_game == 1) begin
-                select <= 5'b00100;
+                select = 5'b00100;
             end else if (start_new_game_final == 1) begin
-                select <= 5'b00010;
+                select = 5'b00010;
             end
         end else begin
-            select <= 5'b00000;
+            select = 5'b00000;
         end
     end
 
