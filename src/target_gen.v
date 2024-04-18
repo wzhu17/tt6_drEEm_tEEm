@@ -2,6 +2,7 @@ module target_gen(
     input wire clk,
     input wire reset,
     input wire result_valid,
+    input wire shoot,
     output wire [4:0] target_x,
     output wire [4:0] target_y
 );
@@ -34,7 +35,7 @@ assign next_target_x = next_rng_state[4:0]; // 5 bits for X coordinate, range 0 
 dffre #(.WIDTH(8)) rng_register ( 
     .clk(clk),
     .r(reset),
-    .en(result_valid),
+    .en(result_valid | shoot),
     .d(rng_state),
     .q(next_rng_state)
 );
@@ -43,7 +44,7 @@ dffre #(.WIDTH(8)) rng_register (
 dffre #(.WIDTH(5)) target_x_register (
     .clk(clk),
     .r(reset),
-    .en(result_valid),
+    .en(result_valid | shoot),
     .d(next_target_x),
     .q(target_x)
 );
@@ -52,7 +53,7 @@ dffre #(.WIDTH(5)) target_x_register (
 dffre #(.WIDTH(5)) target_y_register (
     .clk(clk),
     .r(reset),
-    .en(result_valid),
+    .en(result_valid | shoot),
     .d(next_target_y),
     .q(target_y)
 );
