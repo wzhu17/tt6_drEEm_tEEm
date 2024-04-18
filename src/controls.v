@@ -39,6 +39,8 @@ module controls(
                 select = 5'b00100;
             end else if (start_new_game_final == 1) begin
                 select = 5'b00010;
+            end else begin
+                select = 5'b00000;
             end
         end else begin
             select = 5'b00000;
