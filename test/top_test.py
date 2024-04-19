@@ -27,6 +27,10 @@ async def test_project(dut):
   dut.ui_in.value = 1
   await ClockCycles(dut.clk, 10)
   dut.ui_in.value = 2
+  await ClockCycles(dut.clk, 1)
+  dut.ui_in.value = 32
+  await ClockCycles(dut.clk, 1)
+  dut.ui_in.value = 0
   await ClockCycles(dut.clk, 10)
   dut.ui_in.value = 16
   await ClockCycles(dut.clk, 1)
@@ -36,6 +40,23 @@ async def test_project(dut):
   await ClockCycles(dut.clk, 1)
   dut.ui_in.value = 0
   await ClockCycles(dut.clk, 1)
+  dut.ui_in.value = 32
+  await ClockCycles(dut.clk, 1)
+  dut.ui_in.value = 0
+  await ClockCycles(dut.clk, 1)
+  
+  for i in range(6): 
+    dut.ui_in.value = 8
+    await ClockCycles(dut.clk, 1)
+    dut.ui_in.value = 0
+    await ClockCycles(dut.clk, 1)
+  
+  for i in range(19):
+    dut.ui_in.value = 2
+    await ClockCycles(dut.clk, 1)
+    dut.ui_in.value = 0
+    await ClockCycles(dut.clk, 1)
+
   dut.ui_in.value = 16
   await ClockCycles(dut.clk, 1)
   dut.ui_in.value = 0
