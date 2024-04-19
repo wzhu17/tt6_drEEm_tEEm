@@ -13,6 +13,7 @@ module trajectory_calc (
     input wire [4:0] target_y,
     input wire clk,
     input wire rst,
+    input wire ena, 
     output wire result_valid,
     output wire hit,
     output wire [4:0] positionx
@@ -147,19 +148,19 @@ always @(*) begin
 end
 
 // Flip Flop for state
-dffr #(2) state_ff(.clk(clk), .r(rst), .d(next_state), .q(state));
+dffre #(2) state_ff(.clk(clk), .r(rst), .d(next_state), .q(state), .en(ena));
 // Flip Flop for x_pos
-dffr #(5) x_ff(.clk(clk), .r(rst), .d(next_x), .q(cur_x));
+dffre #(5) x_ff(.clk(clk), .r(rst), .d(next_x), .q(cur_x), .en(ena));
 // Flip Flop for ypos
-dffr #(5) y_ff(.clk(clk), .r(rst), .d(next_y), .q(cur_y));
+dffre #(5) y_ff(.clk(clk), .r(rst), .d(next_y), .q(cur_y), .en(ena));
 // Flip Flop for rise
-dffr #(5) rise_ff(.clk(clk), .r(rst), .d(next_rise), .q(rise));
+dffre #(5) rise_ff(.clk(clk), .r(rst), .d(next_rise), .q(rise), .en(ena));
 // Flip Flop for run
-dffr #(5) run_ff(.clk(clk), .r(rst), .d(next_run), .q(run));
+dffre #(5) run_ff(.clk(clk), .r(rst), .d(next_run), .q(run), .en(ena));
 // Flip Flop for hit ?
-dffr #(1) hit_ff(.clk(clk), .r(rst), .d(next_hit), .q(hit));
+dffre #(1) hit_ff(.clk(clk), .r(rst), .d(next_hit), .q(hit), .en(ena));
 // Flip Flop for direction
-dffr #(1) direction_ff(.clk(clk), .r(rst), .d(next_direction), .q(direction));
+dffre #(1) direction_ff(.clk(clk), .r(rst), .d(next_direction), .q(direction), .en(ena));
 
 
 assign result_valid = state == `DONE;

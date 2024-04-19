@@ -2,7 +2,9 @@ module target_gen(
     input wire clk,
     input wire reset,
     input wire result_valid,
+    input wire start_new_game, 
     input wire shoot,
+    input wire ena, 
     output wire [4:0] target_x,
     output wire [4:0] target_y
 );
@@ -15,10 +17,10 @@ wire [4:0] next_target_x, next_target_y;
 always @(*) begin 
     
     if (result_valid) begin
-         rng_state = {next_rng_state[6:0], next_rng_state[7] ^ next_rng_state[5] ^ next_rng_state[4] ^ next_rng_state[3]};
+        rng_state = {next_rng_state[6:0], next_rng_state[7] ^ next_rng_state[5] ^ next_rng_state[4] ^ next_rng_state[3]};
     end 
     else if (reset) begin
-         rng_state = 8'b01010101; 
+        rng_state = 8'b01010101; 
     end
     else begin 
         rng_state = rng_state;
@@ -35,7 +37,7 @@ assign next_target_x = next_rng_state[4:0]; // 5 bits for X coordinate, range 0 
 dffre #(.WIDTH(8)) rng_register ( 
     .clk(clk),
     .r(reset),
-    .en(result_valid | shoot),
+    .en(start_new_game & ena),
     .d(rng_state),
     .q(next_rng_state)
 );
@@ -44,7 +46,7 @@ dffre #(.WIDTH(8)) rng_register (
 dffre #(.WIDTH(5)) target_x_register (
     .clk(clk),
     .r(reset),
-    .en(result_valid | shoot),
+    .en(start_new_game & ena),
     .d(next_target_x),
     .q(target_x)
 );
@@ -53,7 +55,7 @@ dffre #(.WIDTH(5)) target_x_register (
 dffre #(.WIDTH(5)) target_y_register (
     .clk(clk),
     .r(reset),
-    .en(result_valid | shoot),
+    .en(start_new_game & ena),
     .d(next_target_y),
     .q(target_y)
 );
