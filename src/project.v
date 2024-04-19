@@ -49,7 +49,7 @@ module tt_um_example (
         .direction_in(dir));
 
   target_gen target_gen_inst (.ena(ena), .clk(clk), .reset(rst_n), .result_valid(result_valid),
-   .target_x(target_x), .target_y(target_y), .shoot(shoot), .start_new_game(ui_in[5]));      
+   .target_x(target_x), .target_y(target_y), .start_new_game(ui_in[5]));      
 
   reg [4:0] temp_out; 
   assign uo_out[0] = result_valid;
