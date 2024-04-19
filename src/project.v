@@ -18,7 +18,6 @@ module tt_um_example (
 
   // All output pins must be assigned. If not used, assign to 0.
   //assign uo_out  = ui_in + uio_in;  // Example: ou_out is the sum of ui_in and uio_in
-  assign uio_out = 0;
   assign uio_oe  = 8'b11111111;
   assign uio_out[7] = target_y == 5'd31;
   assign uio_out[6:2] = target_x; 
@@ -81,7 +80,4 @@ module tt_um_example (
       end
     endcase
   end
-
-// TODO: CONTROL -> output the target x, then target y, then start game 
-
 endmodule

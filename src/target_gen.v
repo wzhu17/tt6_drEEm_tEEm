@@ -9,10 +9,10 @@ module target_gen(
 );
 
 // RNG state and target generation logic
-reg [7:0] rng_state; 
+reg [7:0] rng_state = 0; 
 wire [7:0] next_rng_state;
 wire [4:0] next_target_x, next_target_y;
-
+/*
 always @(*) begin 
     if (result_valid) begin
         rng_state = {next_rng_state[6:0], next_rng_state[7] ^ next_rng_state[5] ^ next_rng_state[4] ^ next_rng_state[3]};
@@ -24,7 +24,7 @@ always @(*) begin
         rng_state = rng_state;
     end 
 end
-
+*/
 // Feedback taps are at bits 7, 5, 4, and 3
 
 // Assign next target coordinates
