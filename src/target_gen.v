@@ -29,7 +29,7 @@ end
 // Feedback taps are at bits 7, 5, 4, and 3
 
 // Assign next target coordinates
-assign next_target_y = next_rng_state[0]+5'b11110;  // Randomly 0 or 1 for Y coordinate
+assign next_target_y = {4'b0000, next_rng_state[0]} +5'b11110;  // Randomly 0 or 1 for Y coordinate
 assign next_target_x = next_rng_state[4:0]; // 5 bits for X coordinate, range 0 to 31
 
 // RNG state register
