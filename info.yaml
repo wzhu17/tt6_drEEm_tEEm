@@ -48,12 +48,12 @@ pinout:
   # Bidirectional pins
   uio[0]: ""
   uio[1]: ""
-  uio[2]: ""
-  uio[3]: ""
-  uio[4]: ""
-  uio[5]: ""
-  uio[6]: ""
-  uio[7]: ""
+  uio[2]: "target_x"
+  uio[3]: "target_x"
+  uio[4]: "target_x"
+  uio[5]: "target_x"
+  uio[6]: "target_x"
+  uio[7]: "0 ? target_y = 30 : target_y = 31"
 
 # Do not change!
 yaml_version: 6
