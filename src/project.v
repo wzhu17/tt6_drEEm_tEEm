@@ -19,7 +19,10 @@ module tt_um_example (
   // All output pins must be assigned. If not used, assign to 0.
   //assign uo_out  = ui_in + uio_in;  // Example: ou_out is the sum of ui_in and uio_in
   assign uio_out = 0;
-  assign uio_oe  = 0;
+  assign uio_oe  = 8'b11111111;
+  assign uio_out[7] = target_y == 5'd31;
+  assign uio_out[6:2] = target_x; 
+  assign uio_out[1:0] = 2'd0;
 
   wire left_x, right_x, left_aim, right_aim, shoot;
   wire [4:0] select;
@@ -65,16 +68,16 @@ module tt_um_example (
         temp_out = {2'd0, aim_pos}; // Aim Position
       end
       5'b00100 : begin
-        temp_out = target_x;
+        temp_out = target_y;
       end
       5'b00010 : begin
-        temp_out = target_y; 
+        temp_out = target_x; 
       end
       5'b00001 : begin
         temp_out = tc_pos; 
       end
       default : begin
-        temp_out = 5'd0;
+        temp_out = x_pos;
       end
     endcase
   end
