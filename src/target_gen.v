@@ -3,7 +3,6 @@ module target_gen(
     input wire reset,
     input wire result_valid,
     input wire start_new_game, 
-    input wire shoot,
     input wire ena, 
     output wire [4:0] target_x,
     output wire [4:0] target_y
